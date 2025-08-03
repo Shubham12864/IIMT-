@@ -320,61 +320,91 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                 <div className="grid grid-cols-2 gap-3">
                   <Button 
                     onClick={() => handleUPIAppClick('paytm')}
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-blue-600 font-bold text-xs">P</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/paytm-1.svg" 
+                      alt="Paytm" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2020/11/Paytm-Symbol.png";
+                      }}
+                    />
                     Paytm
                   </Button>
                   
                   <Button 
                     onClick={() => handleUPIAppClick('phonepe')}
-                    className="bg-purple-600 hover:bg-purple-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-purple-500 hover:bg-purple-600 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-purple-600 font-bold text-xs">Pe</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/phonepe-1.svg" 
+                      alt="PhonePe" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/02/PhonePe-Symbol.png";
+                      }}
+                    />
                     PhonePe
                   </Button>
                   
                   <Button 
                     onClick={() => handleUPIAppClick('googlepay')}
-                    className="bg-green-600 hover:bg-green-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-green-600 font-bold text-xs">G</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/google-pay-2.svg" 
+                      alt="Google Pay" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2020/09/Google-Pay-Symbol.png";
+                      }}
+                    />
                     Google Pay
                   </Button>
                   
                   <Button 
                     onClick={() => handleUPIAppClick('bhim')}
-                    className="bg-orange-600 hover:bg-orange-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-orange-500 hover:bg-orange-600 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-orange-600 font-bold text-xs">B</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/bhim-upi.svg" 
+                      alt="BHIM" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/03/BHIM-Symbol.png";
+                      }}
+                    />
                     BHIM
                   </Button>
                   
                   <Button 
                     onClick={() => handleUPIAppClick('amazonpay')}
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-orange-400 hover:bg-orange-500 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-yellow-600 font-bold text-xs">A</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/amazon-pay-1.svg" 
+                      alt="Amazon Pay" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2020/04/Amazon-Pay-Symbol.png";
+                      }}
+                    />
                     Amazon Pay
                   </Button>
                   
                   <Button 
                     onClick={() => handleUPIAppClick('mobikwik')}
-                    className="bg-red-600 hover:bg-red-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-blue-700 hover:bg-blue-800 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-red-600 font-bold text-xs">M</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/mobikwik.svg" 
+                      alt="MobiKwik" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/03/MobiKwik-Symbol.png";
+                      }}
+                    />
                     MobiKwik
                   </Button>
                 </div>
@@ -382,21 +412,26 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                 <div className="grid grid-cols-2 gap-3 mt-3">
                   <Button 
                     onClick={() => handleUPIAppClick('freecharge')}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white py-3 text-sm flex flex-col items-center"
+                    className="bg-blue-400 hover:bg-blue-500 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <div className="w-6 h-6 bg-white rounded mb-1 flex items-center justify-center">
-                      <span className="text-indigo-600 font-bold text-xs">F</span>
-                    </div>
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/freecharge.svg" 
+                      alt="Freecharge" 
+                      className="w-8 h-8 bg-white p-1 rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/03/Freecharge-Symbol.png";
+                      }}
+                    />
                     Freecharge
                   </Button>
                   
                   <Button 
                     onClick={() => handleUPIAppClick('generic')}
                     variant="outline"
-                    className="py-3 text-sm flex flex-col items-center border-2 border-dashed"
+                    className="py-4 text-sm flex flex-col items-center border-2 border-dashed gap-2 h-auto shadow-md hover:bg-gray-50"
                   >
-                    <Smartphone className="w-4 h-4 mb-1" />
-                    Other UPI
+                    <Smartphone className="w-6 h-6" />
+                    Other UPI Apps
                   </Button>
                 </div>
               </CardContent>

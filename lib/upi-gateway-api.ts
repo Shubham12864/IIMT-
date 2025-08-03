@@ -61,10 +61,10 @@ export class UPIGatewayAPI {
   async createOrder(orderData: CreateOrderRequest): Promise<CreateOrderResponse> {
     // Compose payload as per docs - use HTTPS URLs for redirect_url
     const redirectUrl = process.env.NODE_ENV === 'production'
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/donation-success`
+      ? 'https://iimt.vercel.app/donation-success'
       : 'https://warm-turtles-shout.loca.lt/donation-success'; // HTTPS tunnel URL
     const webhookUrl = process.env.NODE_ENV === 'production'
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/upi-gateway`
+      ? 'https://iimt.vercel.app/api/webhooks/upi-gateway'
       : 'https://warm-turtles-shout.loca.lt/api/webhooks/upi-gateway'; // HTTPS tunnel URL
     const payload = {
       key: this.apiKey,

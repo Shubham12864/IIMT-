@@ -11,9 +11,9 @@ export const metadata: Metadata = {
   creator: 'IIMT Group of Colleges',
   publisher: 'IIMT Group of Colleges',
   icons: {
-    icon: '/images/iimt-university-logo.png',
-    shortcut: '/images/iimt-university-logo.png',
-    apple: '/images/iimt-university-logo.png',
+    icon: '/images/iimt-group-logo.png',
+    shortcut: '/images/iimt-group-logo.png',
+    apple: '/images/iimt-group-logo.png',
   },
   openGraph: {
     type: 'website',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     siteName: 'IIMT Group of Colleges',
     images: [
       {
-        url: '/images/iimt-university-logo.png',
+        url: '/images/iimt-group-logo.png',
         width: 800,
         height: 600,
         alt: 'IIMT Group of Colleges Logo',
@@ -47,8 +47,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/images/iimt-university-logo.png" type="image/png" />
-        <link rel="apple-touch-icon" href="/images/iimt-university-logo.png" />
+        <link rel="icon" href="/images/iimt-group-logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/iimt-group-logo.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#2563eb" />
         <style>{`

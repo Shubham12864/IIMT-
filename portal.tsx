@@ -302,7 +302,7 @@ export default function Portal() {
               </div>
               <div className="flex-1 flex justify-center">
                 <Image
-                  src="/images/iimt-university-logo.png"
+                  src="/images/iimt-group-logo.png"
                   alt="IIMT Group of Colleges"
                   width={200}
                   height={48}

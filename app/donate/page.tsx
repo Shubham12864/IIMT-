@@ -151,7 +151,7 @@ export default function DonatePage() {
           <div className="text-center">
             <div className="flex justify-center mb-6">
               <Image
-                src="/images/iimt-university-logo.png"
+                src="/images/iimt-group-logo.png"
                 alt="IIMT Group of Colleges Logo"
                 width={200}
                 height={80}

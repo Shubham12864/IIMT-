@@ -41,8 +41,8 @@ export default function Component() {
         <div className="text-center">
           <div className="flex justify-center mb-8">
             <img
-              src="/images/iimt-university-logo.png"
-              alt="IIMT University - Meerut - UGC Approved Section 2(f) & 12B"
+              src="/images/iimt-group-logo.png"
+              alt="IIMT Group of Colleges - Leading Educational Institution"
               className="h-20 w-auto max-w-sm mx-auto"
             />
           </div>

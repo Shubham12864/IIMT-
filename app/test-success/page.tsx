@@ -101,7 +101,7 @@ function TestSuccessContent() {
         <div className="text-center">
           <div className="flex justify-center mb-4">
             <Image
-              src="/images/iimt-university-logo.png"
+              src="/images/iimt-group-logo.png"
               alt="IIMT Group of Colleges Logo"
               width={150}
               height={60}

@@ -20,28 +20,21 @@ export async function GET(
 }
 
 async function getPaymentDetails(orderId: string) {
-  const fs = require('fs').promises;
-  const path = require('path');
-  
   try {
-    const paymentsFile = path.join(process.cwd(), 'data', 'custom-payments.json');
+    // Use in-memory storage for Vercel deployment (since filesystem is read-only)
+    // Get from global memory storage
+    const payments = global.payments || {};
+    const payment = payments[orderId];
     
-    // Create directory if it doesn't exist
-    const dataDir = path.dirname(paymentsFile);
-    await fs.mkdir(dataDir, { recursive: true });
-    
-    // Read payments file
-    let payments: Record<string, any> = {};
-    try {
-      const data = await fs.readFile(paymentsFile, 'utf8');
-      payments = JSON.parse(data);
-    } catch {
-      // File doesn't exist, return empty object
+    if (payment) {
+      console.log(`✅ Found payment: ${orderId}`);
+      return payment;
+    } else {
+      console.log(`❌ Payment not found: ${orderId}`);
+      return null;
     }
-    
-    return payments[orderId] || null;
   } catch (error) {
-    console.error('Error reading payments file:', error);
+    console.error('Error reading payment from memory:', error);
     return null;
   }
 }

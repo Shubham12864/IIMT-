@@ -36,7 +36,10 @@ export async function createCustomDonation(formData: FormData) {
     console.log('📞 Making API call to create payment...');
 
     // Create custom payment via API
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/custom-payments/create`, {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+    
+    const response = await fetch(`${baseUrl}/api/custom-payments/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

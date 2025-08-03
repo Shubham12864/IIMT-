@@ -59,30 +59,24 @@ export async function POST(request: NextRequest) {
 }
 
 async function savePayment(paymentData: any) {
-  const fs = require('fs').promises;
-  const path = require('path');
+  // Use in-memory storage for Vercel deployment (since filesystem is read-only)
+  // In a real production app, you'd use a database like Supabase, MongoDB, etc.
   
   try {
-    const paymentsFile = path.join(process.cwd(), 'data', 'custom-payments.json');
-    const dataDir = path.dirname(paymentsFile);
+    // For now, we'll simulate successful save since we can't write to filesystem on Vercel
+    // The payment data would normally be saved to a database
+    console.log(`💾 Payment data to save:`, {
+      orderId: paymentData.orderId,
+      amount: paymentData.amount,
+      donorName: paymentData.donorName,
+      donorPhone: paymentData.donorPhone,
+      status: paymentData.status,
+      createdAt: paymentData.createdAt
+    });
     
-    // Create directory if it doesn't exist
-    await fs.mkdir(dataDir, { recursive: true });
-    
-    // Read existing payments
-    let payments: Record<string, any> = {};
-    try {
-      const data = await fs.readFile(paymentsFile, 'utf8');
-      payments = JSON.parse(data);
-    } catch {
-      // File doesn't exist, start with empty object
-    }
-    
-    // Add new payment
-    payments[paymentData.orderId] = paymentData;
-    
-    // Write back to file
-    await fs.writeFile(paymentsFile, JSON.stringify(payments, null, 2));
+    // Store in global memory (will reset on server restart, but works for demo)
+    global.payments = global.payments || {};
+    global.payments[paymentData.orderId] = paymentData;
     
     console.log(`✅ Created payment with proper order ID: ${paymentData.orderId} - ₹${paymentData.amount}`);
     return true;

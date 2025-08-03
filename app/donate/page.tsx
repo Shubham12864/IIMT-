@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeft, Heart, Shield, CreditCard, AlertCircle, CheckCircle } from 'lucide-react';
-import { initiateUPIDonation } from '@/app/actions/upi-donation-actions';
+import { createCustomDonation } from '@/app/actions/custom-donation-actions';
 import Image from 'next/image';
 
 const PRESET_AMOUNTS = [5000, 10000, 20000, 50000];
@@ -21,6 +21,7 @@ export default function DonatePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showAmountConfirmation, setShowAmountConfirmation] = useState(false);
 
   const finalAmount = selectedAmount || (customAmount ? parseFloat(customAmount) : 0);
   const isFormValid = finalAmount >= 10 && name.trim() && phoneNumber.length === 10;
@@ -83,6 +84,12 @@ export default function DonatePage() {
       return;
     }
 
+    // Show amount confirmation dialog
+    setShowAmountConfirmation(true);
+  };
+
+  const confirmAndProceed = async () => {
+    setShowAmountConfirmation(false);
     setIsLoading(true);
     setError('');
     setSuccess('');
@@ -91,44 +98,24 @@ export default function DonatePage() {
       const formData = new FormData();
       formData.append('amount', finalAmount.toString());
       formData.append('name', name.trim());
-      formData.append('phoneNumber', phoneNumber);
+      formData.append('phone', phoneNumber);
       formData.append('email', email.trim());
 
-      console.log('🚀 Submitting donation form with data:', {
+      console.log('🚀 Submitting custom donation form with data:', {
         amount: finalAmount,
         name: name.trim(),
-        phoneNumber,
+        phone: phoneNumber,
         email: email.trim()
       });
 
-      const result = await initiateUPIDonation(formData);
+      // Use custom donation system instead of UPI Gateway
+      await createCustomDonation(formData);
       
-      console.log('📄 Donation result:', result);
+      // The function will redirect automatically, so no need for additional handling
 
-      if (result.success && result.paymentUrl) {
-        setSuccess('Payment initiated successfully! Opening payment gateway...');
-        
-        console.log('✅ Opening payment URL:', result.paymentUrl);
-        
-        // Small delay to show success message
-        setTimeout(() => {
-          // Try to open in new tab first
-          const newWindow = window.open(result.paymentUrl, '_blank', 'noopener,noreferrer');
-          
-          if (!newWindow || newWindow.closed) {
-            // If popup is blocked, redirect in same window
-            console.log('⚠️ Popup blocked, redirecting in same window');
-            window.location.href = result.paymentUrl!;
-          }
-        }, 1000);
-
-      } else {
-        console.error('❌ Payment initiation failed:', result.error);
-        setError(result.error || 'Failed to initiate payment. Please try again.');
-      }
     } catch (error) {
-      console.error('❌ Unexpected error:', error);
-      setError('An unexpected error occurred. Please try again.');
+      console.error('❌ Custom donation creation failed:', error);
+      setError((error as Error).message || 'Failed to create payment. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -163,6 +150,81 @@ export default function DonatePage() {
             <p className="text-gray-600">Your contribution helps us continue our educational mission and support our students</p>
           </div>
         </div>
+
+        {/* 🔥 Amount Confirmation Modal */}
+        {showAmountConfirmation && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md">
+              <CardHeader className="bg-blue-600 text-white rounded-t-lg">
+                <CardTitle className="text-center">Confirm Your Donation</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="text-center space-y-4">
+                  <div className="text-4xl font-bold text-blue-600">
+                    ₹{finalAmount.toLocaleString('en-IN')}
+                  </div>
+                  
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left">
+                    <h4 className="font-semibold text-blue-800 mb-2">Donation Details:</h4>
+                    <div className="space-y-1 text-sm text-blue-700">
+                      <div className="flex justify-between">
+                        <span>Amount:</span>
+                        <span className="font-semibold">₹{finalAmount.toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Donor:</span>
+                        <span>{name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Phone:</span>
+                        <span>{phoneNumber}</span>
+                      </div>
+                      {email && (
+                        <div className="flex justify-between">
+                          <span>Email:</span>
+                          <span>{email}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <p className="text-green-800 text-sm">
+                      ✅ You will get a <strong>dynamic QR code</strong> with amount <strong>₹{finalAmount.toLocaleString('en-IN')}</strong> pre-filled
+                    </p>
+                    <p className="text-green-700 text-xs mt-1">
+                      No need to enter amount manually in UPI apps!
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowAmountConfirmation(false)}
+                      className="flex-1"
+                    >
+                      ← Back to Edit
+                    </Button>
+                    <Button 
+                      onClick={confirmAndProceed}
+                      disabled={isLoading}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Creating...
+                        </div>
+                      ) : (
+                        'Proceed to Pay'
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         <Card className="shadow-xl">
           <CardHeader>

@@ -125,10 +125,17 @@ export default function Component() {
               <span>Sign in with Google</span>
             </Button>
 
-            <div className="text-center">
-              <a href="#" className="text-blue-600 hover:text-blue-800 text-sm">
-                Keycloak Login
-              </a>
+            <div className="text-center space-y-2">
+              <div>
+                <a href="#" className="text-blue-600 hover:text-blue-800 text-sm">
+                  Keycloak Login
+                </a>
+              </div>
+              <div>
+                <a href="/admin/login" className="text-red-600 hover:text-red-800 text-sm font-medium">
+                  Admin Login
+                </a>
+              </div>
             </div>
           </form>
         </div>

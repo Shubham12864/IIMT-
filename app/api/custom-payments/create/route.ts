@@ -1,18 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
+  console.log('🚀 Custom payment API called');
+  
   try {
     const { amount, donorName, donorPhone, donorEmail } = await request.json();
     
+    console.log('📝 Received data:', { amount, donorName, donorPhone, donorEmail });
+    
     // Validate required fields
     if (!amount || !donorName || !donorPhone) {
+      console.log('❌ Missing required fields');
       return NextResponse.json({ 
         error: 'Missing required fields: amount, donorName, donorPhone' 
       }, { status: 400 });
     }
     
-    // Generate unique order ID
-    const orderId = `IIMT_CUSTOM_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+    // Generate proper order ID
+    const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').substring(0, 14);
+    const randomNum = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+    const orderId = `IIMT${timestamp}${randomNum}`;
     
     // Create payment record
     const paymentData = {
@@ -31,8 +38,11 @@ export async function POST(request: NextRequest) {
     const success = await savePayment(paymentData);
     
     if (!success) {
+      console.log('❌ Failed to save payment');
       return NextResponse.json({ error: 'Failed to create payment' }, { status: 500 });
     }
+    
+    console.log('✅ Payment created successfully:', orderId);
     
     // Return payment details
     return NextResponse.json({
@@ -74,7 +84,7 @@ async function savePayment(paymentData: any) {
     // Write back to file
     await fs.writeFile(paymentsFile, JSON.stringify(payments, null, 2));
     
-    console.log(`✅ Created custom payment: ${paymentData.orderId} - ₹${paymentData.amount}`);
+    console.log(`✅ Created payment with proper order ID: ${paymentData.orderId} - ₹${paymentData.amount}`);
     return true;
     
   } catch (error) {

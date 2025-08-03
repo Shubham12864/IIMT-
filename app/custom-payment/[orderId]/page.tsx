@@ -4,7 +4,13 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, Smartphone, CheckCircle } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import QRCodeSVG to avoid SSR issues
+const QRCodeSVG = dynamic(() => import('qrcode.react').then(mod => ({ default: mod.QRCodeSVG })), {
+  ssr: false,
+  loading: () => <div className="w-64 h-64 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">Loading QR...</div>
+});
 
 interface CustomPaymentPageProps {
   params: Promise<{ orderId: string }>

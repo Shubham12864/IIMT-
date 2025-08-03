@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, XCircle, Clock, ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 function TestSuccessContent() {
   const searchParams = useSearchParams()
@@ -44,7 +45,7 @@ function TestSuccessContent() {
               <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-green-800 mb-2">Payment Successful! 🎉</h2>
               <p className="text-green-700 mb-4">
-                Thank you for your donation to IIMT University. Your contribution will make a difference!
+                Thank you for your donation to IIMT Group of Colleges. Your contribution will make a difference!
               </p>
               {orderId && (
                 <div className="bg-white p-3 rounded border">
@@ -98,8 +99,18 @@ function TestSuccessContent() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-6">
         <div className="text-center">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/images/iimt-university-logo.png"
+              alt="IIMT Group of Colleges Logo"
+              width={150}
+              height={60}
+              className="object-contain"
+              priority
+            />
+          </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Payment Status</h1>
-          <p className="text-gray-600">IIMT University Donation</p>
+          <p className="text-gray-600">IIMT Group of Colleges Donation</p>
         </div>
 
         {renderStatus()}

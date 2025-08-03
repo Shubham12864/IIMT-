@@ -34,7 +34,7 @@ export async function initiateUPIDonation(formData: FormData) {
     const order = await upiAPI.createOrder({
       client_txn_id: orderId,
       amount: amountNum,
-      p_info: `Donation by ${name} - IIMT College`,
+      p_info: `Donation by ${name} - IIMT Group of Colleges`,
       customer_name: name,
       customer_email: email || `${phoneNumber}@noemail.com`,
       customer_mobile: phoneNumber,

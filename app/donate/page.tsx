@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowLeft, Heart, Shield, CreditCard, AlertCircle, CheckCircle } from 'lucide-react';
 import { initiateUPIDonation } from '@/app/actions/upi-donation-actions';
+import Image from 'next/image';
 
 const PRESET_AMOUNTS = [5000, 10000, 20000, 50000];
 
@@ -24,11 +25,16 @@ export default function DonatePage() {
   const finalAmount = selectedAmount || (customAmount ? parseFloat(customAmount) : 0);
   const isFormValid = finalAmount >= 10 && name.trim() && phoneNumber.length === 10;
 
+  // Reset error when form changes
+  const resetState = () => {
+    setError('');
+    setSuccess('');
+  };
+
   const handleAmountSelect = (amount: number) => {
     setSelectedAmount(amount);
     setCustomAmount('');
-    setError('');
-    setSuccess('');
+    resetState();
   };
 
   const handleCustomAmountChange = (value: string) => {
@@ -36,16 +42,14 @@ export default function DonatePage() {
     if (value) {
       setSelectedAmount(null);
     }
-    setError('');
-    setSuccess('');
+    resetState();
   };
 
   const handlePhoneChange = (value: string) => {
     // Only allow digits and limit to 10 characters
     const digits = value.replace(/\D/g, '').slice(0, 10);
     setPhoneNumber(digits);
-    setError('');
-    setSuccess('');
+    resetState();
   };
 
   const validateForm = () => {
@@ -145,13 +149,18 @@ export default function DonatePage() {
           </Button>
           
           <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="bg-blue-600 p-3 rounded-full">
-                <Heart className="w-8 h-8 text-white" />
-              </div>
+            <div className="flex justify-center mb-6">
+              <Image
+                src="/images/iimt-university-logo.png"
+                alt="IIMT Group of Colleges Logo"
+                width={200}
+                height={80}
+                className="object-contain"
+                priority
+              />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Make a Donation</h1>
-            <p className="text-gray-600">Your contribution helps us continue our mission</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Support IIMT Group of Colleges</h1>
+            <p className="text-gray-600">Your contribution helps us continue our educational mission and support our students</p>
           </div>
         </div>
 
@@ -200,7 +209,7 @@ export default function DonatePage() {
                 {finalAmount > 0 && (
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-blue-800 font-semibold">
-                      Donation Amount: ₹{finalAmount}
+                      Donation Amount: ₹{finalAmount.toLocaleString('en-IN')}
                     </p>
                   </div>
                 )}
@@ -294,7 +303,7 @@ export default function DonatePage() {
                     Processing...
                   </div>
                 ) : finalAmount > 0 ? (
-                  `Donate ₹${finalAmount} Now`
+                  `Donate ₹${finalAmount.toLocaleString('en-IN')} Now`
                 ) : (
                   'Donate Now'
                 )}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -180,10 +181,6 @@ export default function Portal() {
                     <p className="text-lg text-gray-900">General Fund</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Amount</p>
-                    <p className="text-lg text-green-600">₹1,000</p>
-                  </div>
-                  <div>
                     <p className="text-sm font-medium text-gray-500">Payment Method</p>
                     <p className="text-lg text-gray-900">Online/UPI</p>
                   </div>
@@ -191,6 +188,11 @@ export default function Portal() {
                     <p className="text-sm font-medium text-gray-500">Tax Benefit</p>
                     <p className="text-lg text-gray-900">80G Available</p>
                   </div>
+                </div>
+                <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    Support IIMT Group of Colleges by making a donation. You can choose your preferred amount on the next page.
+                  </p>
                 </div>
                 <div className="mt-6">
                   <Button
@@ -299,7 +301,14 @@ export default function Portal() {
                 </Button>
               </div>
               <div className="flex-1 flex justify-center">
-                <img src="/images/iimt-university-logo.png" alt="IIMT University" className="h-12 w-auto" />
+                <Image
+                  src="/images/iimt-university-logo.png"
+                  alt="IIMT Group of Colleges"
+                  width={200}
+                  height={48}
+                  className="h-12 w-auto object-contain"
+                  priority
+                />
               </div>
               <div className="flex items-center space-x-4">
                 <Bell className="h-6 w-6 text-gray-500" />
@@ -331,7 +340,7 @@ export default function Portal() {
                         </div>
                         <div className="flex items-center space-x-2">
                           <BarChart3 className="h-4 w-4 text-gray-400" />
-                          <span className="text-gray-300">IIMT College of Pharmacy - Noida</span>
+                          <span className="text-gray-300">IIMT Group of Colleges</span>
                         </div>
                       </div>
                     </div>
@@ -355,7 +364,7 @@ export default function Portal() {
             </div>
           </div>
           <div className="bg-teal-500 text-white text-center py-2">
-            <span className="text-sm">● IIMT College of Pharmacy - Noida</span>
+            <span className="text-sm">● IIMT Group of Colleges</span>
           </div>
         </div>
 

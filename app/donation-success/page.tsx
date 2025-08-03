@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
+import Image from 'next/image';
 
 function DonationSuccessContent() {
   const searchParams = useSearchParams();
@@ -42,7 +43,7 @@ function DonationSuccessContent() {
       case 'success':
         return {
           title: 'Payment Successful!',
-          message: 'Thank you for your donation. Your payment has been processed successfully.',
+          message: 'Thank you for your donation to IIMT Group of Colleges. Your contribution will help us continue our educational mission.',
           color: 'text-green-600'
         };
       case 'failed':
@@ -66,6 +67,16 @@ function DonationSuccessContent() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/images/iimt-university-logo.png"
+              alt="IIMT Group of Colleges Logo"
+              width={150}
+              height={60}
+              className="object-contain"
+              priority
+            />
+          </div>
           <div className="flex justify-center mb-4">
             {getStatusIcon()}
           </div>

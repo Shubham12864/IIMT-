@@ -117,7 +117,9 @@ export default function DonatePage() {
       console.error('❌ Custom donation creation failed:', error);
       
       // Don't show redirect errors as they are expected behavior
-      if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+      if (error?.digest?.startsWith('NEXT_REDIRECT') || 
+          error?.message?.includes('NEXT_REDIRECT') ||
+          error?.message?.includes('Server Components render')) {
         // This is a successful redirect, not an actual error
         return;
       }

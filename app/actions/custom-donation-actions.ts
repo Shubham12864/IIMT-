@@ -54,13 +54,14 @@ export async function createCustomDonation(formData: FormData) {
   } catch (error: any) {
     console.error('Custom donation creation failed:', error)
     
-    // Don't re-throw redirect errors - they are expected
-    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+    // In production, redirect errors should be allowed to bubble up
+    // Don't intercept NEXT_REDIRECT errors as they're part of normal flow
+    if (error?.digest?.startsWith('NEXT_REDIRECT') || error?.message?.includes('NEXT_REDIRECT')) {
       throw error
     }
     
-    // Only throw actual errors
-    throw error
+    // Only throw actual application errors
+    throw new Error('Failed to process donation. Please try again.')
   }
 }
 

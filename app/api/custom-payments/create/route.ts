@@ -25,9 +25,14 @@ export async function POST(request: NextRequest) {
     const paymentData = {
       orderId,
       amount: parseInt(amount),
+      name: donorName,
+      phone: donorPhone,
+      email: donorEmail || '',
       donorName,
       donorPhone,
       donorEmail: donorEmail || '',
+      purpose: 'Educational Institution Support - IIMT Group of Colleges',
+      donationType: 'Educational Donation',
       status: 'pending_payment',
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(), // 15 minutes expiry

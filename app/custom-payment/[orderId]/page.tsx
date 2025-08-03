@@ -260,22 +260,41 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
             <Card className="shadow-xl mb-6">
               <CardContent className="p-6">
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-                  <div className="text-sm space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Order ID:</span>
-                      <span className="font-mono text-sm">{orderId}</span>
+                  <h4 className="font-semibold text-orange-800 mb-3 text-center">Payment Details</h4>
+                  <div className="text-sm space-y-3">
+                    <div className="flex justify-between items-center py-1">
+                      <span className="text-gray-600 font-medium">Order ID:</span>
+                      <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{orderId}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Amount:</span>
-                      <span className="font-semibold text-lg text-green-600">₹{payment.amount.toLocaleString('en-IN')}</span>
+                    <div className="flex justify-between items-center py-1">
+                      <span className="text-gray-600 font-medium">Amount:</span>
+                      <span className="font-bold text-xl text-green-600">₹{payment.amount.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Donor:</span>
-                      <span>{payment.name}</span>
+                    <div className="border-t border-orange-200 pt-2">
+                      <div className="flex justify-between items-start py-1">
+                        <span className="text-gray-600 font-medium">Donor:</span>
+                        <span className="font-semibold text-right max-w-[200px]">{payment.name}</span>
+                      </div>
+                      <div className="flex justify-between items-start py-1">
+                        <span className="text-gray-600 font-medium">Phone:</span>
+                        <span className="text-right">{payment.phone}</span>
+                      </div>
+                      {payment.email && (
+                        <div className="flex justify-between items-start py-1">
+                          <span className="text-gray-600 font-medium">Email:</span>
+                          <span className="text-right text-sm max-w-[200px] break-words">{payment.email}</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Purpose:</span>
-                      <span>{payment.purpose}</span>
+                    <div className="border-t border-orange-200 pt-2">
+                      <div className="flex justify-between items-start py-1">
+                        <span className="text-gray-600 font-medium">Purpose:</span>
+                        <span className="text-right text-sm max-w-[200px] font-medium text-blue-700">{payment.purpose}</span>
+                      </div>
+                      <div className="flex justify-between items-start py-1">
+                        <span className="text-gray-600 font-medium">Type:</span>
+                        <span className="text-right text-sm text-green-700">{payment.donationType}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -322,14 +341,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('paytm')}
                     className="bg-blue-500 hover:bg-blue-600 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/paytm-1.svg" 
-                      alt="Paytm" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2020/11/Paytm-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-blue-600 font-bold text-lg">₽</span>
+                    </div>
                     Paytm
                   </Button>
                   
@@ -337,14 +351,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('phonepe')}
                     className="bg-purple-500 hover:bg-purple-600 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/phonepe-1.svg" 
-                      alt="PhonePe" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/02/PhonePe-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-purple-600 font-bold text-lg">☎</span>
+                    </div>
                     PhonePe
                   </Button>
                   
@@ -352,14 +361,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('googlepay')}
                     className="bg-blue-600 hover:bg-blue-700 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/google-pay-2.svg" 
-                      alt="Google Pay" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2020/09/Google-Pay-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-blue-600 font-bold text-lg">G</span>
+                    </div>
                     Google Pay
                   </Button>
                   
@@ -367,14 +371,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('bhim')}
                     className="bg-orange-500 hover:bg-orange-600 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/bhim-upi.svg" 
-                      alt="BHIM" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/03/BHIM-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-orange-600 font-bold text-lg">₹</span>
+                    </div>
                     BHIM
                   </Button>
                   
@@ -382,14 +381,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('amazonpay')}
                     className="bg-orange-400 hover:bg-orange-500 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/amazon-pay-1.svg" 
-                      alt="Amazon Pay" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2020/04/Amazon-Pay-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-orange-600 font-bold text-lg">📦</span>
+                    </div>
                     Amazon Pay
                   </Button>
                   
@@ -397,14 +391,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('mobikwik')}
                     className="bg-blue-700 hover:bg-blue-800 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/mobikwik.svg" 
-                      alt="MobiKwik" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/03/MobiKwik-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-blue-700 font-bold text-lg">M</span>
+                    </div>
                     MobiKwik
                   </Button>
                 </div>
@@ -414,14 +403,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
                     onClick={() => handleUPIAppClick('freecharge')}
                     className="bg-blue-400 hover:bg-blue-500 text-white py-4 text-sm flex flex-col items-center gap-2 h-auto shadow-md"
                   >
-                    <img 
-                      src="https://cdn.worldvectorlogo.com/logos/freecharge.svg" 
-                      alt="Freecharge" 
-                      className="w-8 h-8 bg-white p-1 rounded"
-                      onError={(e) => {
-                        e.currentTarget.src = "https://logos-world.net/wp-content/uploads/2021/03/Freecharge-Symbol.png";
-                      }}
-                    />
+                    <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                      <span className="text-blue-600 font-bold text-lg">⚡</span>
+                    </div>
                     Freecharge
                   </Button>
                   

@@ -23,10 +23,9 @@ export default function Component() {
     if (loginId === "52250200" && password === "123456") {
       // Simulate loading
       setTimeout(() => {
-        alert("Login Successful! Welcome to IIMT University Portal.")
         setIsLoading(false)
-        // Here you would typically redirect to dashboard
-        // window.location.href = "/dashboard"
+        // Redirect to portal
+        window.location.href = "/portal"
       }, 1000)
     } else {
       setTimeout(() => {

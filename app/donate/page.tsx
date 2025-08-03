@@ -113,8 +113,15 @@ export default function DonatePage() {
       
       // The function will redirect automatically, so no need for additional handling
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Custom donation creation failed:', error);
+      
+      // Don't show redirect errors as they are expected behavior
+      if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+        // This is a successful redirect, not an actual error
+        return;
+      }
+      
       setError((error as Error).message || 'Failed to create payment. Please try again.');
     } finally {
       setIsLoading(false);

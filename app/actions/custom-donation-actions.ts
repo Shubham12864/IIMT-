@@ -51,8 +51,15 @@ export async function createCustomDonation(formData: FormData) {
     // Redirect to custom payment page
     redirect(result.paymentUrl)
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Custom donation creation failed:', error)
+    
+    // Don't re-throw redirect errors - they are expected
+    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error
+    }
+    
+    // Only throw actual errors
     throw error
   }
 }

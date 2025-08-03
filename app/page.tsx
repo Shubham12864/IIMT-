@@ -1,9 +1,5 @@
-import IIMTLogin from "../iimt-login"
+import { redirect } from 'next/navigation'
 
 export default function Page() {
-  return (
-    <div>
-      <IIMTLogin />
-    </div>
-  )
+  redirect('/donate')
 }

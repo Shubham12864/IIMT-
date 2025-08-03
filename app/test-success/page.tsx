@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
@@ -7,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle, XCircle, Clock, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export default function TestSuccessPage() {
+function TestSuccessContent() {
   const searchParams = useSearchParams()
   const orderId = searchParams.get("order_id")
   const [status, setStatus] = useState<"loading" | "success" | "failed" | "pending">("loading")
@@ -113,5 +114,29 @@ export default function TestSuccessPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function TestSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+        <div className="max-w-2xl mx-auto space-y-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Payment Status</h1>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+          <Card className="border-blue-200 bg-blue-50">
+            <CardContent className="p-6 text-center">
+              <Clock className="h-12 w-12 text-blue-600 mx-auto mb-4 animate-spin" />
+              <h2 className="text-xl font-semibold text-blue-800 mb-2">Loading</h2>
+              <p className="text-blue-700">Please wait...</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    }>
+      <TestSuccessContent />
+    </Suspense>
   )
 }

@@ -1,0 +1,133 @@
+const UPI_GATEWAY_API_KEY = "API-c5c8521b-cd3d-45ab-bbe9-b71108a77b3d"
+const UPI_GATEWAY_BASE_URL = "https://api.ekqr.in/api"
+
+export interface CreateOrderRequest {
+  client_txn_id: string
+  amount: number
+  p_info?: string
+  customer_name: string
+  customer_email?: string
+  customer_mobile: string
+}
+
+export class UPIGatewayAPI {
+  private apiKey = UPI_GATEWAY_API_KEY;
+  private baseURL = UPI_GATEWAY_BASE_URL;
+
+  async createOrder(orderData: CreateOrderRequest): Promise<CreateOrderResponse> {
+    const redirectUrl = process.env.NODE_ENV === 'production'
+      ? 'https://yourdomain.com/donation-success'
+      : 'http://localhost:3000/donation-success';
+
+    const webhookUrl = process.env.NODE_ENV === 'production'
+      ? 'https://yourdomain.com/api/webhooks/upi-gateway'
+      : 'http://localhost:3000/api/webhooks/upi-gateway';
+
+    const payload = {
+      key: this.apiKey,
+      client_txn_id: orderData.client_txn_id,
+      amount: orderData.amount.toString(),
+      p_info: orderData.p_info || `Donation by ${orderData.customer_name}`,
+      customer_name: orderData.customer_name,
+      customer_email: orderData.customer_email || '',
+      customer_mobile: orderData.customer_mobile,
+      redirect_url: redirectUrl,
+      udf1: webhookUrl
+    };
+
+    console.log('🚀 Sending payload to UPI Gateway:', {
+      ...payload,
+      key: 'API-***' // Hide API key in logs
+    });
+
+    try {
+      const response = await fetch(`${this.baseURL}/create_order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseText = await response.text();
+      console.log('📦 Raw UPI Gateway Response:', responseText);
+
+      if (!response.ok) {
+        console.error('❌ UPI Gateway HTTP Error:', response.status, responseText);
+        throw new Error(`UPI Gateway API Error: ${response.status} - ${responseText}`);
+      }
+
+      let result: CreateOrderResponse;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error('❌ Failed to parse UPI Gateway response:', parseError);
+        throw new Error('Invalid response from UPI Gateway');
+      }
+
+      console.log('✅ Parsed UPI Gateway Response:', result);
+
+      if (!result.status) {
+        throw new Error(result.msg || 'UPI Gateway returned error status');
+      }
+
+      if (!result.data?.payment_url) {
+        throw new Error('No payment URL received from UPI Gateway');
+      }
+
+      return result;
+    } catch (error) {
+      console.error('❌ UPI Gateway API Error:', error);
+      throw error;
+    }
+  }
+    txnAt: string
+    createdAt: string
+    remark: string
+  }
+}
+
+export class UPIGatewayAPI {
+  private static async makeRequest<T>(endpoint: string, data: any): Promise<T> {
+    try {
+      console.log(`Making request to: ${UPI_GATEWAY_BASE_URL}${endpoint}`)
+      console.log("Request data:", data)
+
+      const response = await fetch(`${UPI_GATEWAY_BASE_URL}${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      const responseData = await response.json()
+      console.log("API Response:", responseData)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      return responseData
+    } catch (error) {
+      console.error(`UPI Gateway API error (${endpoint}):`, error)
+      throw error
+    }
+  }
+
+  static async createOrder(orderData: CreateOrderRequest): Promise<CreateOrderResponse> {
+    return this.makeRequest<CreateOrderResponse>("/create_order", orderData)
+  }
+
+  static async checkOrderStatus(statusData: CheckOrderRequest): Promise<CheckOrderResponse> {
+    return this.makeRequest<CheckOrderResponse>("/check_order_status", statusData)
+  }
+
+  static formatDate(date: Date): string {
+    // Format: DD-MM-YYYY (as required by UPI Gateway)
+    const day = date.getDate().toString().padStart(2, "0")
+    const month = (date.getMonth() + 1).toString().padStart(2, "0")
+    const year = date.getFullYear()
+    return `${day}-${month}-${year}`
+  }
+}

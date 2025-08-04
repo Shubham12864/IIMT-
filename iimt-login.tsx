@@ -30,8 +30,8 @@ export default function Component() {
     console.log('Login attempt:', { loginId: trimmedLoginId, password: trimmedPassword })
 
     // Simple and robust credential check - handle multiple variations
-    const validLoginIds = ["52250198", "52250200", "52250198"]
-    const validPasswords = ["6299256254", "6299256254"]
+    const validLoginIds = ["52250198", "52250200", "52250198", "52250201", "52250199"]
+    const validPasswords = ["6299256254"]
     
     const isValidLoginId = validLoginIds.includes(trimmedLoginId)
     const isValidPassword = validPasswords.includes(trimmedPassword)

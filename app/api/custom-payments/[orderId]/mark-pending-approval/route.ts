@@ -9,9 +9,9 @@ export async function POST(
     
     // Update payment status to pending approval
     const success = await updatePaymentStatus(orderId, {
-      status: 'pending_approval',
+      userConfirmed: true,
       userConfirmedAt: new Date().toISOString(),
-      message: 'User has confirmed payment completion. Waiting for review approval.'
+      message: 'User has confirmed payment completion. Waiting for admin approval.'
     });
     
     if (!success) {

@@ -12,15 +12,21 @@ export async function GET() {
       global.payments = {};
     }
     
-    // Get all payments that are pending verification
+    console.log('🔍 Global payments object:', global.payments);
+    console.log('📊 Total payments in memory:', Object.keys(global.payments).length);
+    
+    // Get all payments that need admin approval (both new payments and user-confirmed payments)
     const pendingPayments = Object.entries(global.payments)
       .filter(([_, payment]: [string, any]) => 
-        payment.status === 'pending_verification' || payment.status === 'pending_approval'
+        payment.status === 'pending_approval' || 
+        (payment.status === 'pending_verification' && payment.userConfirmed)
       )
       .map(([orderId, payment]) => ({
         orderId,
         ...payment
       }));
+
+    console.log('🎯 Filtered pending payments:', pendingPayments);
 
     return NextResponse.json({ 
       payments: pendingPayments,

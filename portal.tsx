@@ -49,8 +49,10 @@ const PaymentApprovalsContent = () => {
 
   const loadPendingPayments = async () => {
     try {
+      console.log('🔍 Loading pending payments...');
       const response = await fetch('/api/custom-payments/pending')
       const data = await response.json()
+      console.log('📊 Pending payments response:', data);
       setPendingPayments(data.payments || [])
     } catch (error) {
       console.error('Failed to load pending payments:', error)
@@ -113,11 +115,16 @@ const PaymentApprovalsContent = () => {
                       Amount: ₹{payment.amount}
                     </div>
                     <div className="text-sm text-gray-600">
-                      Status: <span className="capitalize font-medium text-orange-600">{payment.status?.replace('_', ' ')}</span>
+                      User: {payment.name || payment.donorName} ({payment.email || payment.donorEmail})
                     </div>
-                    {payment.userMarkedPaidAt && (
+                    <div className="text-sm text-gray-600">
+                      Status: <span className="capitalize font-medium text-orange-600">
+                        {payment.userConfirmed ? 'User Confirmed - Waiting Approval' : 'New Payment Request'}
+                      </span>
+                    </div>
+                    {payment.userConfirmedAt && (
                       <div className="text-sm text-gray-600">
-                        User confirmed payment: {new Date(payment.userMarkedPaidAt).toLocaleString()}
+                        User confirmed: {new Date(payment.userConfirmedAt).toLocaleString()}
                       </div>
                     )}
                     <div className="text-sm text-gray-600">

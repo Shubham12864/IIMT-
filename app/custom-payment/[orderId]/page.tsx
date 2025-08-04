@@ -50,6 +50,26 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
     initializePage();
   }, [params]);
 
+  // Periodic status checking when user is waiting for approval
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (showWaitingMessage && !confirmingPayment) {
+      // Check payment status every 5 seconds
+      interval = setInterval(async () => {
+        if (orderId) {
+          await fetchPaymentDetails(orderId);
+        }
+      }, 5000);
+    }
+    
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [showWaitingMessage, confirmingPayment, orderId]);
+
   const fetchPaymentDetails = async (orderIdParam: string) => {
     try {
       const response = await fetch(`/api/custom-payments/${orderIdParam}`);

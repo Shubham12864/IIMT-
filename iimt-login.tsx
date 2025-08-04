@@ -29,11 +29,11 @@ export default function Component() {
     }
     console.log('Login attempt:', { loginId: trimmedLoginId, password: trimmedPassword })
 
-    // Accept both string and number input for loginId and password
-    const validLoginId = ["52250198", 52250198]
-    const validPassword = ["6299256254", 6299256254]
+    // Simple and robust credential check
+    const isValidLoginId = (trimmedLoginId === "52250198" || trimmedLoginId === "52250198")
+    const isValidPassword = (trimmedPassword === "6299256254" || trimmedPassword === "6299256254")
 
-    if (validLoginId.includes(trimmedLoginId) && validPassword.includes(trimmedPassword)) {
+    if (isValidLoginId && isValidPassword) {
       setTimeout(() => {
         setIsLoading(false)
         window.location.href = "/portal"

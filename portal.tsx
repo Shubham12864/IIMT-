@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -37,6 +37,118 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+// Payment Approvals Component
+const PaymentApprovalsContent = () => {
+  const [pendingPayments, setPendingPayments] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [approving, setApproving] = useState('')
+
+  useEffect(() => {
+    loadPendingPayments()
+  }, [])
+
+  const loadPendingPayments = async () => {
+    try {
+      const response = await fetch('/api/custom-payments/pending')
+      const data = await response.json()
+      setPendingPayments(data.payments || [])
+    } catch (error) {
+      console.error('Failed to load pending payments:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const approvePayment = async (orderId: string) => {
+    setApproving(orderId)
+    try {
+      const response = await fetch(`/api/custom-payments/${orderId}/approve`, {
+        method: 'POST',
+      })
+      
+      if (response.ok) {
+        // Remove approved payment from list
+        setPendingPayments(prev => prev.filter((payment: any) => payment.orderId !== orderId))
+        alert('Payment approved successfully!')
+      } else {
+        alert('Failed to approve payment')
+      }
+    } catch (error) {
+      console.error('Failed to approve payment:', error)
+      alert('Failed to approve payment')
+    } finally {
+      setApproving('')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="p-6">
+        <h2 className="text-2xl font-bold text-blue-500 mb-6">Payment Approvals</h2>
+        <div className="text-center py-8">Loading pending payments...</div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-bold text-blue-500 mb-6">Payment Approvals</h2>
+      
+      {pendingPayments.length === 0 ? (
+        <div className="text-center py-8">
+          <div className="text-gray-500 mb-4">No pending payments</div>
+          <Button onClick={loadPendingPayments} variant="outline">
+            Refresh
+          </Button>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {pendingPayments.map((payment: any) => (
+            <Card key={payment.orderId}>
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start">
+                  <div className="space-y-2">
+                    <div className="font-semibold text-lg">Order: {payment.orderId}</div>
+                    <div className="text-sm text-gray-600">
+                      Amount: ₹{payment.amount}
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Status: <span className="capitalize font-medium text-orange-600">{payment.status?.replace('_', ' ')}</span>
+                    </div>
+                    {payment.userMarkedPaidAt && (
+                      <div className="text-sm text-gray-600">
+                        User confirmed payment: {new Date(payment.userMarkedPaidAt).toLocaleString()}
+                      </div>
+                    )}
+                    <div className="text-sm text-gray-600">
+                      Created: {new Date(payment.createdAt).toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <Button
+                      onClick={() => approvePayment(payment.orderId)}
+                      disabled={approving === payment.orderId}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {approving === payment.orderId ? 'Approving...' : 'Approve Payment'}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+          
+          <div className="flex justify-center pt-4">
+            <Button onClick={loadPendingPayments} variant="outline">
+              Refresh List
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // Add this after the imports
 const WEBHOOK_SECRET =
   "iimt_webhook_2024_" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
@@ -49,6 +161,7 @@ export default function Portal() {
   const navigationItems = [
     { id: "AdmitCard", label: "Admit Card", icon: CreditCard },
     { id: "AlumniPortal", label: "AlumniPortal", icon: Users },
+    { id: "PaymentApprovals", label: "Payment Approvals", icon: FileCheck },
     { id: "Attendance", label: "Attendance", icon: UserCheck },
     { id: "CentralCommunication", label: "Central Communication", icon: MessageSquare },
     { id: "Circular", label: "Circular", icon: FileText },
@@ -208,6 +321,10 @@ export default function Portal() {
           </div>
         </div>
       )
+    }
+
+    if (activeSection === "PaymentApprovals") {
+      return <PaymentApprovalsContent />
     }
 
     // Default dashboard view with service cards

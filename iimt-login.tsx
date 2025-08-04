@@ -19,8 +19,8 @@ export default function Component() {
     setIsLoading(true)
     setError("")
 
-    // Check credentials
-    if (loginId === "52250200" && password === "123456") {
+    // Check credentials for regular user login
+    if (loginId === "52250198" && password === "6299256254") {
       // Simulate loading
       setTimeout(() => {
         setIsLoading(false)
@@ -29,7 +29,7 @@ export default function Component() {
       }, 1000)
     } else {
       setTimeout(() => {
-        setError("Invalid credentials. Access denied.")
+        setError("Invalid credentials. Please check your Login ID and Password.")
         setIsLoading(false)
       }, 1000)
     }
@@ -52,7 +52,7 @@ export default function Component() {
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="loginId" className="text-sm font-medium text-gray-700">
-                Login Id
+                Login ID
               </Label>
               <Input
                 id="loginId"

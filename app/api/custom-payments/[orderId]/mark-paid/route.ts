@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Use memory storage (compatible with Vercel)
+declare global {
+  var payments: any;
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ orderId: string }> }
@@ -30,32 +35,18 @@ export async function POST(
 }
 
 async function updatePaymentStatus(orderId: string, updates: any) {
-  const fs = require('fs').promises;
-  const path = require('path');
-  
   try {
-    const paymentsFile = path.join(process.cwd(), 'data', 'custom-payments.json');
-    const dataDir = path.dirname(paymentsFile);
-    await fs.mkdir(dataDir, { recursive: true });
-    
-    // Read existing payments
-    let payments: Record<string, any> = {};
-    try {
-      const data = await fs.readFile(paymentsFile, 'utf8');
-      payments = JSON.parse(data);
-    } catch {
-      // File doesn't exist, start with empty object
+    // Use global memory storage instead of file system
+    if (!global.payments) {
+      global.payments = {};
     }
     
-    if (!payments[orderId]) {
+    if (!global.payments[orderId]) {
       return false; // Payment not found
     }
     
     // Update payment with new data
-    payments[orderId] = { ...payments[orderId], ...updates };
-    
-    // Write back to file
-    await fs.writeFile(paymentsFile, JSON.stringify(payments, null, 2));
+    global.payments[orderId] = { ...global.payments[orderId], ...updates };
     
     return true;
   } catch (error) {

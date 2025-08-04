@@ -38,7 +38,7 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [showWaitingMessage, setShowWaitingMessage] = useState(false);
 
-  const merchantUPI = "paytm.s1ok3sz@pty";
+  const merchantUPI = "shubham.217@ptsbi";
   const merchantName = "IIMT Group of Colleges";
 
   useEffect(() => {
@@ -145,19 +145,25 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
     setShowWaitingMessage(true);
     
     try {
-      const response = await fetch(`/api/custom-payments/${orderId}/mark-paid`, {
+      // Mark payment as pending approval instead of paid
+      const response = await fetch(`/api/custom-payments/${orderId}/mark-pending-approval`, {
         method: 'POST',
       });
       
       if (response.ok) {
-        setPaymentConfirmed(true);
+        // Don't set paymentConfirmed=true immediately
+        // Instead, keep showing waiting message for support team approval
+        setConfirmingPayment(false);
+        // showWaitingMessage stays true to show waiting for approval
       } else {
-        setError('Failed to confirm payment');
+        setError('Failed to submit payment confirmation. Please try again.');
+        setConfirmingPayment(false);
+        setShowWaitingMessage(false);
       }
     } catch (err) {
-      setError('Failed to confirm payment');
-    } finally {
+      setError('Failed to submit payment confirmation. Please try again.');
       setConfirmingPayment(false);
+      setShowWaitingMessage(false);
     }
   };
 
@@ -179,6 +185,41 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
           <CardContent className="p-6 text-center">
             <p className="text-red-600 mb-4">{error}</p>
             <Button onClick={() => window.history.back()}>Go Back</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // If payment is completed, show success message
+  if (payment?.status === 'completed') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-white p-4 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6 text-center">
+            <div className="mb-4">
+              <CheckCircle className="w-16 h-16 text-green-600 mx-auto" />
+            </div>
+            <h2 className="text-2xl font-bold text-green-800 mb-2">Payment Successful!</h2>
+            <p className="text-gray-600 mb-4">
+              Your payment of ₹{payment?.amount?.toLocaleString('en-IN')} has been successfully processed and approved.
+            </p>
+            <p className="text-sm text-green-700 mb-4">
+              Order ID: {payment.orderId}
+            </p>
+            {payment.approvedAt && (
+              <p className="text-xs text-gray-500 mb-4">
+                Approved on: {new Date(payment.approvedAt).toLocaleString()}
+              </p>
+            )}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+              <p className="text-xs text-green-600">
+                ✅ Thank you for your donation to IIMT Group of Colleges!
+              </p>
+            </div>
+            <Button onClick={() => window.location.href = '/'} className="bg-green-600 hover:bg-green-700">
+              Return to Home
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -210,10 +251,39 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
         <Card className="w-full max-w-md">
           <CardContent className="p-6 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-4"></div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Please Wait</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Submitting Confirmation</h2>
             <p className="text-gray-600 mb-4">
-              Taking time to confirm payment of ₹{payment?.amount}...
+              Submitting your payment confirmation...
             </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (showWaitingMessage && !confirmingPayment) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white p-4 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6 text-center">
+            <div className="mb-4">
+              <Clock className="w-12 h-12 text-blue-600 mx-auto animate-pulse" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Waiting for Payment Review</h2>
+            <p className="text-gray-600 mb-4">
+              Your payment confirmation has been submitted for ₹{payment?.amount?.toLocaleString('en-IN')}.
+            </p>
+            <p className="text-sm text-blue-700 mb-4">
+              We will review your payment and approve it shortly. Please wait for the confirmation.
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+              <p className="text-xs text-blue-600">
+                💡 This process usually takes a few minutes. You will be notified once approved.
+              </p>
+            </div>
+            <Button onClick={() => window.location.href = '/'} variant="outline">
+              Return to Home
+            </Button>
           </CardContent>
         </Card>
       </div>

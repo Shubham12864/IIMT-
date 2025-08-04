@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Clock, Smartphone, CheckCircle } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { PAYMENT_CONFIG, UPI_PARAMS } from '@/lib/payment-constants';
 
 // Dynamically import QRCodeSVG to avoid SSR issues
 const QRCodeSVG = dynamic(() => import('qrcode.react').then(mod => ({ default: mod.QRCodeSVG })), {
@@ -26,6 +27,7 @@ interface PaymentDetails {
   donationType: string;
   status: string;
   createdAt: string;
+  approvedAt?: string;
 }
 
 export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
@@ -38,8 +40,9 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [showWaitingMessage, setShowWaitingMessage] = useState(false);
 
-  const merchantUPI = "shubham.217@ptsbi";
-  const merchantName = "IIMT Group of Colleges";
+  // Use constants for consistency
+  const merchantUPI = PAYMENT_CONFIG.UPI_ID;
+  const merchantName = PAYMENT_CONFIG.MERCHANT_NAME;
 
   useEffect(() => {
     const initializePage = async () => {
@@ -102,16 +105,23 @@ export default function CustomPaymentPage({ params }: CustomPaymentPageProps) {
   const generateDynamicUPILink = () => {
     if (!payment) return '';
     
+    // UPI parameters according to NPCI guidelines
     const upiParams = new URLSearchParams({
-      pa: merchantUPI,                                    
-      pn: merchantName,                                   
-      am: payment.amount.toString(),                      
-      cu: 'INR',                                         
-      tn: `IIMT Donation - ${payment.name} - Order ${payment.orderId}`, 
-      tr: payment.orderId                                
+      pa: merchantUPI,                                    // Payee Address (UPI ID)
+      pn: merchantName,                                   // Payee Name
+      am: payment.amount.toString(),                      // Amount
+      cu: UPI_PARAMS.CURRENCY,                           // Currency
+      tn: `IIMT Donation ${payment.orderId}`,           // Transaction Note (simplified)
+      tr: payment.orderId,                               // Transaction Reference
+      mode: UPI_PARAMS.MODE,                            // Payment mode (02 for UPI)
+      purpose: UPI_PARAMS.PURPOSE                       // Purpose code (00 for default)
     });
     
-    return `upi://pay?${upiParams.toString()}`;
+    const upiLink = `upi://pay?${upiParams.toString()}`;
+    console.log('🔗 Generated UPI Link:', upiLink);
+    console.log('💳 UPI ID:', merchantUPI);
+    
+    return upiLink;
   };
 
   const handleUPIAppClick = (app: string) => {

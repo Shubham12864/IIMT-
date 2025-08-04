@@ -1,20 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
-const PAYMENTS_FILE = path.join(process.cwd(), 'data', 'custom-payments.json');
+// Use memory storage (compatible with Vercel)
+declare global {
+  var payments: any;
+}
 
 export async function GET() {
   try {
-    if (!fs.existsSync(PAYMENTS_FILE)) {
-      return NextResponse.json([]);
+    // Initialize global payments if not exists
+    if (!global.payments) {
+      global.payments = {};
     }
 
-    const fileContent = fs.readFileSync(PAYMENTS_FILE, 'utf-8');
-    const payments = JSON.parse(fileContent);
+    console.log('🔍 Admin payments API - Global payments:', global.payments);
+    console.log('📊 Total payments in memory:', Object.keys(global.payments).length);
     
     // Transform the data to match the interface expected by the frontend
-    const transformedPayments = Object.values(payments).map((payment: any) => ({
+    const transformedPayments = Object.values(global.payments).map((payment: any) => ({
       orderId: payment.orderId,
       amount: payment.amount,
       name: payment.donorName || payment.name,
@@ -23,15 +25,20 @@ export async function GET() {
       purpose: payment.purpose || 'Donation',
       donationType: payment.donationType || 'General',
       status: payment.status === 'pending_payment' ? 'created' : 
+              payment.status === 'pending_approval' ? 'pending_verification' :
               payment.status === 'userMarkedPaid' ? 'pending_verification' : 
               payment.status,
-      createdAt: payment.createdAt
+      createdAt: payment.createdAt,
+      userConfirmed: payment.userConfirmed || false,
+      userConfirmedAt: payment.userConfirmedAt
     }));
     
     // Sort by creation date (newest first)
     const sortedPayments = transformedPayments.sort((a: any, b: any) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
+
+    console.log('📋 Transformed payments for admin:', sortedPayments);
 
     return NextResponse.json(sortedPayments);
   } catch (error) {

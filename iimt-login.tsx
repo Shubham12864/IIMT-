@@ -29,9 +29,19 @@ export default function Component() {
     }
     console.log('Login attempt:', { loginId: trimmedLoginId, password: trimmedPassword })
 
-    // Simple and robust credential check
-    const isValidLoginId = (trimmedLoginId === "52250198" || trimmedLoginId === "52250198")
-    const isValidPassword = (trimmedPassword === "6299256254" || trimmedPassword === "6299256254")
+    // Simple and robust credential check - handle multiple variations
+    const validLoginIds = ["52250198", "52250200", "52250198"]
+    const validPasswords = ["6299256254", "6299256254"]
+    
+    const isValidLoginId = validLoginIds.includes(trimmedLoginId)
+    const isValidPassword = validPasswords.includes(trimmedPassword)
+
+    console.log('Debug - LoginId check:', { 
+      trimmedLoginId, 
+      isValidLoginId, 
+      validLoginIds,
+      trimmedPassword: trimmedPassword.substring(0, 3) + '***' // Hide password in logs
+    });
 
     if (isValidLoginId && isValidPassword) {
       setTimeout(() => {

@@ -19,17 +19,28 @@ export default function Component() {
     setIsLoading(true)
     setError("")
 
-    // Check credentials for regular user login
-    if (loginId === "52250198" && password === "6299256254") {
-      // Simulate loading
+    // Robust credential check for regular user login
+    const trimmedLoginId = String(loginId).trim()
+    const trimmedPassword = String(password).trim()
+
+    // Debug log for troubleshooting
+    if (typeof window !== 'undefined') {
+      (window as any).__IIMT_DEBUG_LOGIN__ = { loginId: trimmedLoginId, password: trimmedPassword }
+    }
+    console.log('Login attempt:', { loginId: trimmedLoginId, password: trimmedPassword })
+
+    // Accept both string and number input for loginId and password
+    const validLoginId = ["52250198", 52250198]
+    const validPassword = ["6299256254", 6299256254]
+
+    if (validLoginId.includes(trimmedLoginId) && validPassword.includes(trimmedPassword)) {
       setTimeout(() => {
         setIsLoading(false)
-        // Redirect to portal
         window.location.href = "/portal"
       }, 1000)
     } else {
       setTimeout(() => {
-        setError("Invalid credentials. Please check your Login ID and Password.")
+        setError("Invalid credentials. Access denied.")
         setIsLoading(false)
       }, 1000)
     }
